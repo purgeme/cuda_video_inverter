@@ -27,7 +27,6 @@ __global__ void Inversion(unsigned char* image, unsigned char* image_inv, int si
 
 int cuda_run(string input_video)
 {
-	cout << input_video << endl;
 	VideoCapture inp_vcap(input_video);
 	if(!inp_vcap.isOpened()) return -1;
 
@@ -63,10 +62,7 @@ int cuda_run(string input_video)
 	// Mat img = imread(imgfile,IMREAD_COLOR);
 
 	while(inp_vcap.isOpened()){
-		inp_vcap >> img;
-
 		if (img.empty()){
-  	      cout << "Stream ended...\n";
   	      break;
 		}
 
@@ -87,10 +83,11 @@ int cuda_run(string input_video)
 		Mat output = Mat(height,width,CV_8UC3, newImg);
 
 		writer.write(output);
-		imshow("Inverted Image",output);
+		// imshow("Inverted Image",output);
 
 		if (waitKey(5) >= 0) break;
 		
+		inp_vcap >> img;
 	}
 	destroyAllWindows();
 	return 0;

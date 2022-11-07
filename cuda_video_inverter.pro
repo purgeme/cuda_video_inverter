@@ -5,41 +5,35 @@
 TEMPLATE = app
 TARGET = cuda_video_inverter
 INCLUDEPATH += .
-INCLUDEPATH += /opt/cuda/include
-INCLUDEPATH += /usr/include/opencv4
-
-QT += widgets
 
 DESTDIR=build/bin
 OBJECTS_DIR=build
 MOC_DIR=build
 
-# You can make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# Please consult the documentation of the deprecated API in order to know
-# how to port your code away from it.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-OTHER_FILES += ./cuda_inverter.cu
-
 CUDA_DIR = /opt/cuda
+INCLUDEPATH += $$CUDA_DIR/include
+INCLUDEPATH += /usr/include/opencv4
 CUDA_SOURCES += ./cuda_inverter.cu
 CUDA_OBJECTS_DIR = $$OBJECTS_DIR
 CUDA_LIBS = -lcudart -lcuda
-#NVCC_OPTIONS = --use_fast_math
 CUDA_INC = $$join(INCLUDEPATH,'" -I"','-I"','"')
+OPENCV_LIBS = -lopencv_core -lopencv_videoio -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs
+
+OTHER_FILES += $$CUDA_SOURCES
 
 QMAKE_LIBDIR += $$CUDA_DIR/lib
 QMAKE_LIBDIR += $$CUDA_DIR/lib64
+LIBS += $$OPENCV_LIBS
 LIBS += $$CUDA_LIBS
-LIBS += -lopencv_core -lopencv_videoio -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs
 
 cuda_d.input = CUDA_SOURCES
 cuda_d.output = $$CUDA_OBJECTS_DIR/${QMAKE_FILE_BASE}_cuda.o
 cuda_d.commands = $$CUDA_DIR/bin/nvcc $$NVCC_OPTIONS $$CUDA_INC -c -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME}
+# cuda_d.commands = /usr/bin/nvcc $$NVCC_OPTIONS $$CUDA_INC -c -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME}
 cuda_d.dependency_type = TYPE_C
 QMAKE_EXTRA_COMPILERS += cuda_d
+
+QT += widgets
 
 # Input
 HEADERS += mainwindow.h cuda.h

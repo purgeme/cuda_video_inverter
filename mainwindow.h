@@ -2,6 +2,7 @@
 #include<QPushButton>
 #include<QtWidgets>
 #include<QString>
+#include<QBoxLayout>
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +17,10 @@ class MainWindow : public QMainWindow
         void invert_video();
 
     private:
+        QWidget *window = new QWidget;
+        QString input_video_file = "";
+        QLabel *input_video_label = new QLabel(input_video_file, window);
+        QHBoxLayout *buttons = new QHBoxLayout(window);
         QPushButton *browse_file;
         QPushButton *invert_video_button;
-        QString input_video_file;
 };
